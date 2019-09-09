@@ -30,4 +30,4 @@ require "crxlsxwriter"
 
 ## Contributors
 
-- [Zach Baylin](https://github.com/your-github-user) - creator and maintainer
+- [Zach Baylin](https://github.com/zbaylin) - creator and maintainer
