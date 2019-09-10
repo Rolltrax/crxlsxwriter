@@ -1,6 +1,5 @@
-# TODO: Write documentation for `Crxlsxwriter`
-module Crxlsxwriter
-  VERSION = "0.1.0"
+require "./lib/*"
 
-  # TODO: Put your code here
+module CrXLSXWriter
+  VERSION = "0.1.0"
 end
