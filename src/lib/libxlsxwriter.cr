@@ -3,9 +3,14 @@ module CrXLSXWriter
   lib LibXLSXWriter
     type Workbook = Void*
     type Worksheet = Void*
+    type Chartsheet = Void*
     type Format = Void*
     type Chart = Void*
-    type Series = Void*
+    type ChartSeries = Void*
+    type SeriesErrorBars = Void*
+    type ChartAxis = Void*
+
+    alias Str = UInt8*
 
     LXW_DEF_ROW_HEIGHT = 15
 
@@ -41,6 +46,19 @@ module CrXLSXWriter
       LXW_ERROR_WORKSHEET_INDEX_OUT_OF_RANGE
       LXW_ERROR_WORKSHEET_MAX_NUMBER_URLS_EXCEEDED
       LXW_ERROR_IMAGE_DIMENSIONS
+    end
+
+    struct DocProperties
+      title : Str
+      subject : Str
+      author : Str
+      manager : Str
+      company : Str
+      category : Str
+      keywords : Str
+      comments : Str
+      status : Str
+      hyperlink_base : Str
     end
 
     enum UnderlineStyle : Int8
@@ -109,7 +127,7 @@ module CrXLSXWriter
       LXW_PATTERN_GRAY_0625
     end
 
-    enum ChartType
+    enum ChartType : Int8
       LXW_CHART_NONE
       LXW_CHART_AREA
       LXW_CHART_AREA_STACKED
@@ -133,7 +151,7 @@ module CrXLSXWriter
       LXW_CHART_RADAR_FILLED
     end
 
-    enum ChartLegendPosition
+    enum ChartLegendPosition : Int8
       LXW_CHART_LEGEND_NONE
       LXW_CHART_LEGEND_RIGHT
       LXW_CHART_LEGEND_LEFT
@@ -145,7 +163,7 @@ module CrXLSXWriter
       LXW_CHART_LEGEND_OVERLAY_TOP_RIGHT
     end
 
-    enum ChartLineDashType
+    enum ChartLineDashType : Int8
       LXW_CHART_LINE_DASH_SOLID
       LXW_CHART_LINE_DASH_ROUND_DOT
       LXW_CHART_LINE_DASH_SQUARE_DOT
@@ -156,7 +174,7 @@ module CrXLSXWriter
       LXW_CHART_LINE_DASH_LONG_DASH_DOT_DOT
     end
 
-    enum ChartMarkerType
+    enum ChartMarkerType : Int8
       LXW_CHART_MARKER_AUTOMATIC
       LXW_CHART_MARKER_NONE
       LXW_CHART_MARKER_SQUARE
@@ -170,7 +188,7 @@ module CrXLSXWriter
       LXW_CHART_MARKER_PLUS
     end
 
-    enum ChartPatternType
+    enum ChartPatternType : Int8
       LXW_CHART_PATTERN_NONE
       LXW_CHART_PATTERN_PERCENT_5
       LXW_CHART_PATTERN_PERCENT_10
@@ -222,109 +240,142 @@ module CrXLSXWriter
       LXW_CHART_PATTERN_SOLID_DIAMOND
     end
 
-    enum ChartLabelPosition
-      LXW_CHART_LABEL_POSITION_DEFAULT 	
-      LXW_CHART_LABEL_POSITION_CENTER 	
-      LXW_CHART_LABEL_POSITION_RIGHT 	
-      LXW_CHART_LABEL_POSITION_LEFT 	
-      LXW_CHART_LABEL_POSITION_ABOVE 	
-      LXW_CHART_LABEL_POSITION_BELOW 	
-      LXW_CHART_LABEL_POSITION_INSIDE_BASE 	
-      LXW_CHART_LABEL_POSITION_INSIDE_END 	
-      LXW_CHART_LABEL_POSITION_OUTSIDE_END 	
-      LXW_CHART_LABEL_POSITION_BEST_FIT 	
+    enum ChartLabelPosition : Int8
+      LXW_CHART_LABEL_POSITION_DEFAULT
+      LXW_CHART_LABEL_POSITION_CENTER
+      LXW_CHART_LABEL_POSITION_RIGHT
+      LXW_CHART_LABEL_POSITION_LEFT
+      LXW_CHART_LABEL_POSITION_ABOVE
+      LXW_CHART_LABEL_POSITION_BELOW
+      LXW_CHART_LABEL_POSITION_INSIDE_BASE
+      LXW_CHART_LABEL_POSITION_INSIDE_END
+      LXW_CHART_LABEL_POSITION_OUTSIDE_END
+      LXW_CHART_LABEL_POSITION_BEST_FIT
     end
 
-    enum ChartLabelSeperator
-      LXW_CHART_LABEL_SEPARATOR_COMMA 	
-      LXW_CHART_LABEL_SEPARATOR_SEMICOLON 	
-      LXW_CHART_LABEL_SEPARATOR_PERIOD 	
-      LXW_CHART_LABEL_SEPARATOR_NEWLINE 	
+    enum ChartLabelSeperator : Int8
+      LXW_CHART_LABEL_SEPARATOR_COMMA
+      LXW_CHART_LABEL_SEPARATOR_SEMICOLON
+      LXW_CHART_LABEL_SEPARATOR_PERIOD
+      LXW_CHART_LABEL_SEPARATOR_NEWLINE
       LXW_CHART_LABEL_SEPARATOR_SPACE
     end
 
-    enum ChartAxisType
+    enum ChartAxisType : Int8
       LXW_CHART_AXIS_TYPE_X
       LXW_CHART_AXIS_TYPE_Y
     end
 
-    enum ChartAxisTickPosition
-      LXW_CHART_AXIS_POSITION_ON_TICK 	
+    enum ChartAxisTickPosition : Int8
+      LXW_CHART_AXIS_POSITION_ON_TICK
       LXW_CHART_AXIS_POSITION_BETWEEN
     end
 
-    enum ChartAxisLabelPosition
-      LXW_CHART_AXIS_LABEL_POSITION_NEXT_TO 	
-      LXW_CHART_AXIS_LABEL_POSITION_HIGH 	
-      LXW_CHART_AXIS_LABEL_POSITION_LOW 	
+    enum ChartAxisLabelPosition : Int8
+      LXW_CHART_AXIS_LABEL_POSITION_NEXT_TO
+      LXW_CHART_AXIS_LABEL_POSITION_HIGH
+      LXW_CHART_AXIS_LABEL_POSITION_LOW
       LXW_CHART_AXIS_LABEL_POSITION_NONE
     end
 
-    enum ChartAxisLabelAlignment
-      LXW_CHART_AXIS_LABEL_ALIGN_CENTER 	
-      LXW_CHART_AXIS_LABEL_ALIGN_LEFT 	
+    enum ChartAxisLabelAlignment : Int8
+      LXW_CHART_AXIS_LABEL_ALIGN_CENTER
+      LXW_CHART_AXIS_LABEL_ALIGN_LEFT
       LXW_CHART_AXIS_LABEL_ALIGN_RIGHT
     end
 
-    enum ChartAxisDisplayUnit
+    enum ChartAxisDisplayUnit : Int8
       LXW_CHART_AXIS_UNITS_NONE
-      LXW_CHART_AXIS_UNITS_HUNDREDS 	
-      LXW_CHART_AXIS_UNITS_THOUSANDS 	
-      LXW_CHART_AXIS_UNITS_TEN_THOUSANDS 	
-      LXW_CHART_AXIS_UNITS_HUNDRED_THOUSANDS 	
-      LXW_CHART_AXIS_UNITS_MILLIONS 	
-      LXW_CHART_AXIS_UNITS_TEN_MILLIONS 	
-      LXW_CHART_AXIS_UNITS_HUNDRED_MILLIONS 	
-      LXW_CHART_AXIS_UNITS_BILLIONS 	
-      LXW_CHART_AXIS_UNITS_TRILLIONS 
+      LXW_CHART_AXIS_UNITS_HUNDREDS
+      LXW_CHART_AXIS_UNITS_THOUSANDS
+      LXW_CHART_AXIS_UNITS_TEN_THOUSANDS
+      LXW_CHART_AXIS_UNITS_HUNDRED_THOUSANDS
+      LXW_CHART_AXIS_UNITS_MILLIONS
+      LXW_CHART_AXIS_UNITS_TEN_MILLIONS
+      LXW_CHART_AXIS_UNITS_HUNDRED_MILLIONS
+      LXW_CHART_AXIS_UNITS_BILLIONS
+      LXW_CHART_AXIS_UNITS_TRILLIONS
     end
 
-    enum ChartAxisTickMark
-      LXW_CHART_AXIS_TICK_MARK_DEFAULT 	
-      LXW_CHART_AXIS_TICK_MARK_NONE 	
-      LXW_CHART_AXIS_TICK_MARK_INSIDE 	
-      LXW_CHART_AXIS_TICK_MARK_OUTSIDE 	
+    enum ChartAxisTickMark : Int8
+      LXW_CHART_AXIS_TICK_MARK_DEFAULT
+      LXW_CHART_AXIS_TICK_MARK_NONE
+      LXW_CHART_AXIS_TICK_MARK_INSIDE
+      LXW_CHART_AXIS_TICK_MARK_OUTSIDE
       LXW_CHART_AXIS_TICK_MARK_CROSSING
     end
-    
-    enum ChartBlank
-      LXW_CHART_BLANKS_AS_GAP 	
-      LXW_CHART_BLANKS_AS_ZERO 	
-      LXW_CHART_BLANKS_AS_CONNECTED 
+
+    enum ChartBlank : Int8
+      LXW_CHART_BLANKS_AS_GAP
+      LXW_CHART_BLANKS_AS_ZERO
+      LXW_CHART_BLANKS_AS_CONNECTED
     end
 
-    enum ChartErrorBarType
-      LXW_CHART_ERROR_BAR_TYPE_STD_ERROR 	
-      LXW_CHART_ERROR_BAR_TYPE_FIXED 	
-      LXW_CHART_ERROR_BAR_TYPE_PERCENTAGE 	
-      LXW_CHART_ERROR_BAR_TYPE_STD_DEV 
+    enum ChartErrorBarType : Int8
+      LXW_CHART_ERROR_BAR_TYPE_STD_ERROR
+      LXW_CHART_ERROR_BAR_TYPE_FIXED
+      LXW_CHART_ERROR_BAR_TYPE_PERCENTAGE
+      LXW_CHART_ERROR_BAR_TYPE_STD_DEV
     end
 
-    enum ChartErrorBarAxis
-      LXW_CHART_ERROR_BAR_AXIS_X 	
+    enum ChartErrorBarAxis : Int8
+      LXW_CHART_ERROR_BAR_AXIS_X
       LXW_CHART_ERROR_BAR_AXIS_Y
     end
-    
-    enum ChartErrorBarCap
-      LXW_CHART_ERROR_BAR_END_CAP 	
+
+    enum ChartErrorBarCap : Int8
+      LXW_CHART_ERROR_BAR_END_CAP
       LXW_CHART_ERROR_BAR_NO_CAP
     end
 
-    enum ChartTrendlineType
-      LXW_CHART_TRENDLINE_TYPE_LINEAR 	
-      LXW_CHART_TRENDLINE_TYPE_LOG 	
-      LXW_CHART_TRENDLINE_TYPE_POLY 	
-      LXW_CHART_TRENDLINE_TYPE_POWER 	
-      LXW_CHART_TRENDLINE_TYPE_EXP 	
+    enum ChartTrendlineType : Int8
+      LXW_CHART_TRENDLINE_TYPE_LINEAR
+      LXW_CHART_TRENDLINE_TYPE_LOG
+      LXW_CHART_TRENDLINE_TYPE_POLY
+      LXW_CHART_TRENDLINE_TYPE_POWER
+      LXW_CHART_TRENDLINE_TYPE_EXP
       LXW_CHART_TRENDLINE_TYPE_AVERAGE
     end
 
-    enum ChartErrorBarDirection
-      LXW_CHART_ERROR_BAR_DIR_BOTH 	
-      LXW_CHART_ERROR_BAR_DIR_PLUS 	
-      LXW_CHART_ERROR_BAR_DIR_MINUS 
+    enum ChartErrorBarDirection : Int8
+      LXW_CHART_ERROR_BAR_DIR_BOTH
+      LXW_CHART_ERROR_BAR_DIR_PLUS
+      LXW_CHART_ERROR_BAR_DIR_MINUS
     end
-    
+
+    struct ChartLine
+      color : Color
+      none : Bool
+      width : LibC::Float
+      dash_type : ChartLineDashType
+      transparency : UInt8
+    end
+
+    struct ChartFill
+      color : Color
+      none : Bool
+      transparency : UInt8
+    end
+
+    struct ChartPattern
+      fg_color : Color
+      bg_color : Color
+      type : ChartPatternType
+    end
+
+    struct ChartFont
+      name : Str
+      size : LibC::Double
+      bold : Bool
+      italic : Bool
+      underline : Bool
+      rotation : Int32
+      color : Color
+      pitch_family : UInt8
+      charset : UInt8
+      baseline : Int8
+    end
+
     struct Datetime
       year : Int32
       month : Int32
@@ -336,7 +387,7 @@ module CrXLSXWriter
 
     struct RichString
       format : Format*
-      string : UInt8*
+      string : Str
     end
 
     struct RowColOptions
@@ -352,22 +403,34 @@ module CrXLSXWriter
       y_scale : LibC::Double
     end
 
-    fun workbook_new(path : UInt8*) : Workbook*
-    fun workbook_add_worksheet(workbook : Workbook*, sheetname : UInt8*) : Worksheet*
+    fun workbook_new(path : Str) : Workbook*
+    fun workbook_add_worksheet(workbook : Workbook*, sheetname : Str) : Worksheet*
     fun workbook_close(workbook : Workbook*) : LXWError
+
+    fun workbook_set_properties(workbook : Workbook*, properties : DocProperties*) : LXWError
+    fun workbook_set_custom_property_string(workbook : Workbook*, name : Str, value : Str) : LXWError
+    fun workbook_set_custom_property_number(workbook : Workbook*, name : Str, value : LibC::Double) : LXWError
+    fun workbook_set_custom_property_boolean(workbook : Workbook*, name : Str, value : Bool) : LXWError
+    fun workbook_set_custom_property_datetime(workbook : Workbook*, name : Str, value : Datetime*) : LXWError
+    fun workbook_define_name(workbook : Workbook*, name : Str, formula : Str) : LXWError
+    fun workbook_add_vba_project(workbook : Workbook*, filename : Str) : LXWError
+    fun workbook_set_vba_name(workbook : Workbook*, name : Str)
+
+    fun workbook_get_worksheet_by_name(workbook : Workbook*, name : Str) : Worksheet*
+    fun workbook_get_chartsheet_by_name(workbook : Workbook*, name : Str) : Chartsheet*
 
     fun workbook_add_format(workbook : Workbook*) : Format*
     fun workbook_add_chart(workbook : Workbook*, chart_type : ChartType) : Chart*
 
-    fun worksheet_write_string(worksheet : Worksheet*, row : Row, col : Col, string : UInt8*, format : Format*) : LXWError
+    fun worksheet_write_string(worksheet : Worksheet*, row : Row, col : Col, string : Str, format : Format*) : LXWError
     fun worksheet_write_number(worksheet : Worksheet*, row : Row, col : Col, value : LibC::Double, format : Format*) : LXWError
-    fun worksheet_write_formula(worksheet : Worksheet*, row : Row, col : Col, value : UInt8*, format : Format*) : LXWError
+    fun worksheet_write_formula(worksheet : Worksheet*, row : Row, col : Col, value : Str, format : Format*) : LXWError
     # workbook_write_array_formula
     fun worksheet_write_datetime(worksheet : Worksheet*, row : Row, col : Col, datetime : Datetime*, format : Format*) : LXWError
-    fun worksheet_write_url(worksheet : Worksheet*, row : Row, col : Col, url : UInt8*, format : Format*) : LXWError
+    fun worksheet_write_url(worksheet : Worksheet*, row : Row, col : Col, url : Str, format : Format*) : LXWError
     # worksheet_write_boolean
     fun worksheet_write_blank(worksheet : Worksheet*, row : Row, col : Col, format : Format*) : LXWError
-    fun worksheet_write_formula_num(worksheet : Worksheet*, row : Row, col : Col, formula : UInt8*, format : Format*, result : LibC::Double) : LXWError
+    fun worksheet_write_formula_num(worksheet : Worksheet*, row : Row, col : Col, formula : Str, format : Format*, result : LibC::Double) : LXWError
     fun worksheet_write_rich_string(worksheet : Worksheet*, row : Row, col : Col, rich_string : StaticArray(RichString*, 16), format : Format*) : LXWError
 
     fun worksheet_set_row(worksheet : Worksheet*, row : Row, height : LibC::Double, format : Format*) : LXWError
@@ -375,19 +438,19 @@ module CrXLSXWriter
     fun worksheet_set_column(worksheet : Worksheet*, first_col : Col, last_col : Col, width : LibC::Double, format : Format*) : LXWError
     fun worksheet_set_column_opt(worksheet : Worksheet*, first_col : Col, last_col : Col, width : LibC::Double, format : Format*, options : RowColOptions*) : LXWError
 
-    fun worksheet_insert_image(worksheet : Worksheet*, row : Row, col : Col, filename : UInt8*) : LXWError
-    fun worksheet_insert_image_opt(worksheet : Worksheet*, row : Row, col : Col, filename : UInt8*, options : ImageOptions*) : LXWError
+    fun worksheet_insert_image(worksheet : Worksheet*, row : Row, col : Col, filename : Str) : LXWError
+    fun worksheet_insert_image_opt(worksheet : Worksheet*, row : Row, col : Col, filename : Str, options : ImageOptions*) : LXWError
     fun worksheet_insert_chart(worksheet : Worksheet*, row : Row, col : Col, chart : Chart*)
 
     fun format_set_bold(format : Format*) : Void
     fun format_set_font_color(format : Format*, color : Color)
-    fun format_set_font_name(format : Format*, font_name : UInt8*)
+    fun format_set_font_name(format : Format*, font_name : Str)
     fun format_set_font_size(format : Format*, font_size : LibC::Double)
     fun format_set_italic(format : Format*)
     fun format_set_underline(format : Format*, style : UnderlineStyle)
     fun format_set_font_strikeout(format : Format*)
     fun format_set_font_script(format : Format*, script : FontScript)
-    fun format_set_num_format(format : Format*, num_format : UInt8*)
+    fun format_set_num_format(format : Format*, num_format : Str)
     fun format_set_unlocked(format : Format*)
     fun format_set_hidden(format : Format*)
     fun format_set_align(format : Format*, align : Alignment)
@@ -409,7 +472,61 @@ module CrXLSXWriter
     fun format_set_left_color(format : Format*, color : Color)
     fun format_set_right_color(format : Format*, color : Color)
 
-    fun chart_add_series(chart : Chart*, categories : UInt8*, values : UInt8*) : Series*
-    fun chart_series_set_values(chart : Series*, sheetname : UInt8*, first_row : Row, first_col : Col, last_row : Row, last_col : Col)
+    fun chart_add_series(chart : Chart*, categories : Str, values : Str) : ChartSeries*
+    fun chart_series_set_values(series : ChartSeries*, sheetname : Str, first_row : Row, first_col : Col, last_row : Row, last_col : Col) : Void
+    fun chart_series_set_categories(series : ChartSeries*, sheetname : Str, first_row : Row, first_col : Col, last_row : Row, last_col : Col) : Void
+    fun chart_series_set_name(series : ChartSeries*, name : Str) : Void
+    fun chart_series_set_name_range(series : ChartSeries*, sheetname : Str, row : Row, col : Col) : Void
+    fun chart_series_set_line(series : ChartSeries*, line : ChartLine*) : Void
+    fun chart_series_set_fill(series : ChartSeries*, fill : ChartFill*) : Void
+    fun chart_series_set_invert_if_negative(series : ChartSeries*) : Void
+    fun chart_series_set_pattern(series : ChartSeries*, pattern : ChartPattern) : Void
+    fun chart_series_set_marker_type(series : ChartSeries*, type : ChartMarkerType) : Void
+    fun chart_series_set_marker_size(series : ChartSeries*, size : UInt8) : Void
+    fun chart_series_set_marker_line(series : ChartSeries*, line : ChartLine*) : Void
+    fun chart_series_set_marker_fill(series : ChartSeries*, fill : ChartFill*) : Void
+    fun chart_series_set_marker_pattern(series : ChartSeries*, pattern : ChartPattern) : Void
+    fun chart_series_set_smooth(series : ChartSeries*, smooth : Bool) : Void
+    fun chart_series_set_labels(series : ChartSeries*) : Void
+    fun chart_series_set_labels_options(series : ChartSeries*, show_name : Bool, show_category : Bool, show_value : Bool) : Void
+    fun chart_series_set_labels_separator(series : ChartSeries*, separator : ChartLabelSeperator) : Void
+    fun chart_series_set_labels_position(series : ChartSeries*, position : ChartLabelPosition) : Void
+    fun chart_series_set_labels_leader_line(series : ChartSeries*) : Void
+    fun chart_series_set_labels_legend(series : ChartSeries*) : Void
+    fun chart_series_set_labels_percentage(series : ChartSeries*) : Void
+    fun chart_series_set_labels_num_format(series : ChartSeries*, num_format : Str) : Void
+    fun chart_series_set_labels_font(series : ChartSeries*, font : ChartFont*) : Void
+    fun chart_series_set_trendline(series : ChartSeries*, type : ChartTrendlineType, value : UInt8) : Void
+    fun chart_series_set_trendline_forecast(series : ChartSeries*, forward : LibC::Double, backward : LibC::Double) : Void
+    fun chart_series_set_trendline_equation(series : ChartSeries*) : Void
+    fun chart_series_set_trendline_r_squared(series : ChartSeries*) : Void
+    fun chart_series_set_trendline_intercept(series : ChartSeries*, intercept : LibC::Double) : Void
+    fun chart_series_set_trendline_name(series : ChartSeries*, name : Str) : Void
+    fun chart_series_set_trendline_line(series : ChartSeries*, line : ChartLine*) : Void
+    fun chart_series_get_error_bars(series : ChartSeries*, axis_type : ChartErrorBarAxis) : SeriesErrorBars*
+
+    fun chart_series_set_error_bars(error_bars : SeriesErrorBars*, type : ChartErrorBarType, value : LibC::Double) : Void
+    fun chart_series_set_error_bars_direction(error_bars : SeriesErrorBars*, direction : ChartErrorBarDirection) : Void
+    fun chart_series_set_error_bars_endcap(error_bars : SeriesErrorBars*, endcap : ChartErrorBarCap) : Void
+    fun chart_series_set_error_bars_line(error_bars : SeriesErrorBars*, line : ChartLine*)
+
+    fun chart_axis_get(chart : Chart*, axis_type : ChartAxisType) : ChartAxis*
+    fun chart_axis_set_name(axis : ChartAxis*, name : Str) : Void
+    fun chart_axis_set_name_range(axis : ChartAxis*, sheetname : Str, row : Row, col : Col) : Void
+    fun chart_axis_set_name_font(axis : ChartAxis*, font : ChartFont*) : Void
+    fun chart_axis_set_num_font(axis : ChartAxis*, font : ChartFont*) : Void
+    fun chart_axis_set_num_format(axis : ChartAxis*, num_format : Str) : Void
+    fun chart_axis_set_line(axis : ChartAxis*, chart_line : ChartLine*) : Void
+    fun chart_axis_set_fill(axis : ChartAxis*, fill : ChartFill*) : Void
+    fun chart_axis_set_pattern(axis : ChartAxis*, pattern : ChartPattern*) : Void
+    fun chart_axis_set_reverse(axis : ChartAxis*) : Void
+    fun chart_axis_set_crossing(axis : ChartAxis*, value : LibC::Double) : Void
+    fun chart_axis_set_crossing_max(axis : ChartAxis*) : Void
+    fun chart_axis_off(axis : ChartAxis*) : Void
+    fun chart_axis_set_position(axis : ChartAxis*, position : ChartAxisTickPosition) : Void
+    fun chart_axis_set_label_position(axis : ChartAxis*, position : ChartAxisLabelPosition) : Void
+    fun chart_axis_set_label_align(axis : ChartAxis*, align : ChartAxisLabelAlignment) : Void
+    fun chart_axis_set_min(axis : ChartAxis*, min : LibC::Double) : Void
+    fun chart_axis_set_max(axis : ChartAxis*, max : LibC::Double) : Void
   end
 end
