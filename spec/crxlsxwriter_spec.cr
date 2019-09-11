@@ -6,6 +6,8 @@ module CrXLSXWriter
   Workbook = LibXLSXWriter.workbook_new("test.xlsx")
   Worksheet = LibXLSXWriter.workbook_add_worksheet(Workbook, "Test")
 
+  @@data_cursor = 100
+  
   @@i = 0
   RowLength = 5
   def self.get_row_col
@@ -110,6 +112,80 @@ module CrXLSXWriter
     LibXLSXWriter.format_set_border(format, LibXLSXWriter::Border::LXW_BORDER_DOUBLE)
     LibXLSXWriter.worksheet_write_string(Worksheet, row, col, "Dbl Border", format)
   end
+
+  it "writes formula to cell" do
+    row, col = get_row_col()
+    LibXLSXWriter.worksheet_write_formula(Worksheet, row, col, "=SUM(1, 2)", nil)
+  end
+
+  it "writes datetime to cell" do
+    row, col = get_row_col()
+    datetime = LibXLSXWriter::Datetime.new
+    datetime.year = 2001
+    datetime.month = 1
+    datetime.day = 16
+    LibXLSXWriter.worksheet_write_datetime(Worksheet, row, col, pointerof(datetime), nil)
+  end
+
+  it "writes url to cell" do
+    row, col = get_row_col()
+    LibXLSXWriter.worksheet_write_url(Worksheet, row, col, "https://rolltrax.com", nil)
+  end
+
+  it "writes blank to cell" do
+    row, col = get_row_col()
+    LibXLSXWriter.worksheet_write_blank(Worksheet, row, col, nil)
+  end
+
+  it "writes formula number to cell" do 
+    row, col = get_row_col()
+    LibXLSXWriter.worksheet_write_formula_num(Worksheet, row, col, "=1 + 2", nil, 3)
+  end
+
+  it "writes rich string to cell" do
+    row, col = get_row_col()
+    rich1 = LibXLSXWriter::RichString.new
+    rich1.string = "Is bold!"
+    format1 = LibXLSXWriter.workbook_add_format(Workbook)
+    LibXLSXWriter.format_set_bold(format1)
+    rich1.format = format1
+    rich2 = LibXLSXWriter::RichString.new
+    rich2.string = "Is Under!"
+    format2 = LibXLSXWriter.workbook_add_format(Workbook)
+    LibXLSXWriter.format_set_underline(format2, LibXLSXWriter::UnderlineStyle::LXW_UNDERLINE_SINGLE)
+    rich2.format = format2
+    riches = StaticArray(LibXLSXWriter::RichString*, 16).new(Pointer(LibXLSXWriter::RichString).null)
+    riches[0] = pointerof(rich1)
+    riches[1] = pointerof(rich1)
+    riches[2] = pointerof(rich2)
+    riches[3] = pointerof(rich2)
+    riches[4] = pointerof(rich2)
+    riches[5] = pointerof(rich2)
+    riches[6] = pointerof(rich1)
+    riches[7] = pointerof(rich1)
+    riches[8] = pointerof(rich1)
+    LibXLSXWriter.worksheet_write_rich_string(Worksheet, row, col, riches, nil)
+  end
+
+  it "writes an image to cell with options" do
+    row, col = get_row_col()
+    options = LibXLSXWriter::ImageOptions.new
+    options.x_scale = 0.1
+    options.y_scale = 0.1
+    LibXLSXWriter.worksheet_insert_image_opt(Worksheet, row, col, "logo-new.png", pointerof(options))
+  end
+
+  it "creates and inserts a chart (bar)" do 
+    row, col = get_row_col()
+    chart = LibXLSXWriter.workbook_add_chart(Workbook, LibXLSXWriter::ChartType::LXW_CHART_COLUMN)
+    LibXLSXWriter.worksheet_write_number(Worksheet, @@data_cursor.to_u32, 0.to_u16, 5, nil)
+    LibXLSXWriter.worksheet_write_number(Worksheet, @@data_cursor.to_u32, 1.to_u16, 7, nil)
+    LibXLSXWriter.worksheet_write_number(Worksheet, @@data_cursor.to_u32, 2.to_u16, 1, nil)
+    series = LibXLSXWriter.chart_add_series(chart, nil, nil)
+    LibXLSXWriter.chart_series_set_values(series, "Test", @@data_cursor, 0, @@data_cursor, 2)
+    LibXLSXWriter.worksheet_insert_chart(Worksheet, row, col, chart)
+  end
+
 
   LibXLSXWriter.workbook_close(Workbook)
 end
