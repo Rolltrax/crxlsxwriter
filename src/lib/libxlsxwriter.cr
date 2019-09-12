@@ -614,5 +614,8 @@ module CrXLSXWriter
     fun chartsheet_set_header_opt(chartsheet : Chartsheet*, string : Str, options : HeaderFooterOptions*) : LXWError
     fun chartsheet_set_footer_opt(chartsheet : Chartsheet*, string : Str, options : HeaderFooterOptions*) : LXWError
 
+    # utility.h
+    fun lxw_version : Str
+    fun lxw_strerror(error_num : LXWError) : Str
   end
 end
