@@ -414,7 +414,7 @@ module CrXLSXWriter
     fun workbook_set_custom_property_datetime(workbook : Workbook*, name : Str, value : Datetime*) : LXWError
     fun workbook_define_name(workbook : Workbook*, name : Str, formula : Str) : LXWError
     fun workbook_add_vba_project(workbook : Workbook*, filename : Str) : LXWError
-    fun workbook_set_vba_name(workbook : Workbook*, name : Str)
+    fun workbook_set_vba_name(workbook : Workbook*, name : Str) : LXWError
 
     fun workbook_get_worksheet_by_name(workbook : Workbook*, name : Str) : Worksheet*
     fun workbook_get_chartsheet_by_name(workbook : Workbook*, name : Str) : Chartsheet*
@@ -440,37 +440,37 @@ module CrXLSXWriter
 
     fun worksheet_insert_image(worksheet : Worksheet*, row : Row, col : Col, filename : Str) : LXWError
     fun worksheet_insert_image_opt(worksheet : Worksheet*, row : Row, col : Col, filename : Str, options : ImageOptions*) : LXWError
-    fun worksheet_insert_chart(worksheet : Worksheet*, row : Row, col : Col, chart : Chart*)
+    fun worksheet_insert_chart(worksheet : Worksheet*, row : Row, col : Col, chart : Chart*) : LXWError
 
     fun format_set_bold(format : Format*) : Void
-    fun format_set_font_color(format : Format*, color : Color)
-    fun format_set_font_name(format : Format*, font_name : Str)
-    fun format_set_font_size(format : Format*, font_size : LibC::Double)
-    fun format_set_italic(format : Format*)
-    fun format_set_underline(format : Format*, style : UnderlineStyle)
-    fun format_set_font_strikeout(format : Format*)
-    fun format_set_font_script(format : Format*, script : FontScript)
-    fun format_set_num_format(format : Format*, num_format : Str)
-    fun format_set_unlocked(format : Format*)
-    fun format_set_hidden(format : Format*)
-    fun format_set_align(format : Format*, align : Alignment)
-    fun format_set_text_wrap(format : Format*)
-    fun format_set_rotation(format : Format*, angle : Int16)
-    fun format_set_indent(format : Format*, level : UInt8)
-    fun format_set_pattern(format : Format*, pattern : Pattern)
-    fun format_set_bg_color(format : Format*, color : Color)
-    fun format_set_fg_color(format : Format*, color : Color)
-    fun format_set_fg_color(format : Format*, color : Color)
-    fun format_set_border(format : Format*, style : Border)
-    fun format_set_bottom(format : Format*, style : Border)
-    fun format_set_top(format : Format*, style : Border)
-    fun format_set_left(format : Format*, style : Border)
-    fun format_set_right(format : Format*, style : Border)
-    fun format_set_border_color(format : Format*, color : Color)
-    fun format_set_bottom_color(format : Format*, color : Color)
-    fun format_set_top_color(format : Format*, color : Color)
-    fun format_set_left_color(format : Format*, color : Color)
-    fun format_set_right_color(format : Format*, color : Color)
+    fun format_set_font_color(format : Format*, color : Color) : Void
+    fun format_set_font_name(format : Format*, font_name : Str) : Void
+    fun format_set_font_size(format : Format*, font_size : LibC::Double) : Void
+    fun format_set_italic(format : Format*) : Void
+    fun format_set_underline(format : Format*, style : UnderlineStyle) : Void
+    fun format_set_font_strikeout(format : Format*) : Void
+    fun format_set_font_script(format : Format*, script : FontScript) : Void
+    fun format_set_num_format(format : Format*, num_format : Str) : Void
+    fun format_set_unlocked(format : Format*) : Void
+    fun format_set_hidden(format : Format*) : Void
+    fun format_set_align(format : Format*, align : Alignment) : Void
+    fun format_set_text_wrap(format : Format*) : Void
+    fun format_set_rotation(format : Format*, angle : Int16) : Void
+    fun format_set_indent(format : Format*, level : UInt8) : Void
+    fun format_set_pattern(format : Format*, pattern : Pattern) : Void
+    fun format_set_bg_color(format : Format*, color : Color) : Void
+    fun format_set_fg_color(format : Format*, color : Color) : Void
+    fun format_set_fg_color(format : Format*, color : Color) : Void
+    fun format_set_border(format : Format*, style : Border) : Void
+    fun format_set_bottom(format : Format*, style : Border) : Void
+    fun format_set_top(format : Format*, style : Border) : Void
+    fun format_set_left(format : Format*, style : Border) : Void
+    fun format_set_right(format : Format*, style : Border) : Void
+    fun format_set_border_color(format : Format*, color : Color) : Void
+    fun format_set_bottom_color(format : Format*, color : Color) : Void
+    fun format_set_top_color(format : Format*, color : Color) : Void
+    fun format_set_left_color(format : Format*, color : Color) : Void
+    fun format_set_right_color(format : Format*, color : Color) : Void
 
     fun chart_add_series(chart : Chart*, categories : Str, values : Str) : ChartSeries*
     fun chart_series_set_values(series : ChartSeries*, sheetname : Str, first_row : Row, first_col : Col, last_row : Row, last_col : Col) : Void
@@ -508,7 +508,7 @@ module CrXLSXWriter
     fun chart_series_set_error_bars(error_bars : SeriesErrorBars*, type : ChartErrorBarType, value : LibC::Double) : Void
     fun chart_series_set_error_bars_direction(error_bars : SeriesErrorBars*, direction : ChartErrorBarDirection) : Void
     fun chart_series_set_error_bars_endcap(error_bars : SeriesErrorBars*, endcap : ChartErrorBarCap) : Void
-    fun chart_series_set_error_bars_line(error_bars : SeriesErrorBars*, line : ChartLine*)
+    fun chart_series_set_error_bars_line(error_bars : SeriesErrorBars*, line : ChartLine*) : Void
 
     fun chart_axis_get(chart : Chart*, axis_type : ChartAxisType) : ChartAxis*
     fun chart_axis_set_name(axis : ChartAxis*, name : Str) : Void
@@ -528,5 +528,48 @@ module CrXLSXWriter
     fun chart_axis_set_label_align(axis : ChartAxis*, align : ChartAxisLabelAlignment) : Void
     fun chart_axis_set_min(axis : ChartAxis*, min : LibC::Double) : Void
     fun chart_axis_set_max(axis : ChartAxis*, max : LibC::Double) : Void
+    fun chart_axis_set_log_base(axis : ChartAxis*, log_base : UInt16) : Void
+    fun chart_axis_set_major_tick_mark(axis : ChartAxis*, type : ChartAxisTickMark) : Void
+    fun chart_axis_set_minor_tick_mark(axis : ChartAxis*, type : ChartAxisTickMark) : Void
+    fun chart_axis_set_interval_unit(axis : ChartAxis*, unit : UInt16) : Void
+    fun chart_axis_set_interval_tick(axis : ChartAxis*, unit : UInt16) : Void
+    fun chart_axis_set_major_unit(axis : ChartAxis*, unit : LibC::Double) : Void
+    fun chart_axis_set_minor_unit(axis : ChartAxis*, unit : LibC::Double) : Void
+    fun chart_axis_set_display_units(axis : ChartAxis*, units : ChartAxisDisplayUnit) : Void
+    fun chart_axis_set_display_units_visible(axis : ChartAxis*, visible : Bool) : Void
+    fun chart_axis_major_gridlines_set_visible(axis : ChartAxis*, visible : Bool) : Void
+    fun chart_axis_minor_gridlines_set_visible(axis : ChartAxis*, visible : Bool) : Void
+    fun chart_axis_major_gridlines_set_line(axis : ChartAxis*, line : ChartLine*) : Void
+    fun chart_axis_minor_gridlines_set_line(axis : ChartAxis*, line : ChartLine*) : Void
+
+    fun chart_title_set_name(chart : Chart*, name : Str) : Void
+    fun chart_title_set_name_range(chart : Chart*, sheetname : Str, row : Row, col : Col) : Void
+    fun chart_title_set_name_font(chart : Chart*, font : ChartFont*) : Void
+    fun chart_title_off(chart : Chart*) : Void
+
+    fun chart_legend_set_position(chart : Chart*, position : ChartLegendPosition) : Void
+    fun chart_legend_set_font(chart : Chart*, font : ChartFont*) : Void
+    fun chart_legend_delete_series(chart : Chart*, delete_series : Int16[16]) : LXWError
+
+    fun chart_chartarea_set_line(chart : Chart*, line : ChartLine*) : Void
+    fun chart_chartarea_set_fill(chart : Chart*, line : ChartFill*) : Void
+    fun chart_chartarea_set_pattern(chart : Chart*, line : ChartPattern*) : Void
+    
+    fun chart_plotarea_set_line(chart : Chart*, line : ChartLine*) : Void
+    fun chart_plotarea_set_fill(chart : Chart*, line : ChartFill*) : Void
+    fun chart_plotarea_set_pattern(chart : Chart*, line : ChartPattern*) : Void
+
+    fun chart_set_style(chart : Chart*, style_id : UInt8) : Void
+    fun chart_set_table(chart : Chart*) : Void  
+    fun chart_set_table_grid(chart : Chart*, horizontal : Bool, vertical : Bool, outline : Bool, legend_keys : Bool) : Void  
+    fun chart_set_up_down_bars(chart : Chart*) : Void  
+    fun chart_set_up_down_bars_format(chart : Chart*, up_bar_line : ChartLine*, up_bar_fill : ChartFill*, down_bar_line : ChartLine*, down_bar_fill : ChartFill*) : Void  
+    fun chart_set_drop_lines(chart : Chart*, line : ChartLine*) : Void
+    fun chart_set_high_low_lines(chart : Chart*, line : ChartLine*) : Void
+    fun chart_set_series_overlap(chart : Chart*, overlap : Int8) : Void
+    fun chart_set_series_gap(chart : Chart*, gap : UInt16) : Void
+    fun chart_show_blanks_as(chart : Chart*, option : ChartBlank) : Void
+    fun chart_set_rotation(chart : Chart*, rotation : UInt16) : Void
+    fun chart_set_hole_size(chart : Chart*, size : UInt8) : Void
   end
 end
