@@ -343,6 +343,13 @@ module CrXLSXWriter
       LXW_CHART_ERROR_BAR_DIR_MINUS
     end
 
+    enum Gridlines : UInt8
+      LXW_HIDE_ALL_GRIDLINES 	
+      LXW_SHOW_SCREEN_GRIDLINES 	
+      LXW_SHOW_PRINT_GRIDLINES 	
+      LXW_SHOW_ALL_GRIDLINES 
+    end
+
     struct ChartLine
       color : Color
       none : Bool
@@ -427,6 +434,9 @@ module CrXLSXWriter
       margin : LibC::Double
     end
 
+    # struct DataValidation
+    # end
+
     fun workbook_new(path : Str) : Workbook*
     fun workbook_add_worksheet(workbook : Workbook*, sheetname : Str) : Worksheet*
     fun workbook_close(workbook : Workbook*) : LXWError
@@ -465,7 +475,89 @@ module CrXLSXWriter
     fun worksheet_insert_image(worksheet : Worksheet*, row : Row, col : Col, filename : Str) : LXWError
     fun worksheet_insert_image_opt(worksheet : Worksheet*, row : Row, col : Col, filename : Str, options : ImageOptions*) : LXWError
     fun worksheet_insert_chart(worksheet : Worksheet*, row : Row, col : Col, chart : Chart*) : LXWError
+    fun worksheet_insert_chart_opt(worksheet : Worksheet*, row : Row, col : Col, chart : Chart*, user_options : ImageOptions*) : LXWError
 
+    fun worksheet_merge_range(
+      worksheet : Worksheet*,
+      first_row : Row,
+      first_col : Col, 
+      last_row : Row,
+      last_col : Col,
+      string : Str,
+      format : Format*,
+    ) : LXWError
+    fun worksheet_autofilter(
+      worksheet : Worksheet*,
+      first_row : Row,
+      first_col : Col, 
+      last_row : Row,
+      last_col : Col,
+    ) : LXWError
+    # fun worksheet_data_validation_cell
+    fun worksheet_activate(worksheet : Worksheet*) : Void
+    fun worksheet_select(worksheet : Worksheet*) : Void
+    fun worksheet_hide(worksheet : Worksheet*) : Void
+    fun worksheet_set_first_sheet(worksheet : Worksheet*) : Void
+    fun worksheet_set_first_sheet(worksheet : Worksheet*) : Void
+    fun worksheet_freeze_panes(worksheet : Worksheet*, row : Row, col : Col) : Void
+    fun worksheet_split_panes(worksheet : Worksheet*, vertical : LibC::Double, horizontal : LibC::Double) : Void
+    fun worksheet_set_selection(
+      worksheet : Worksheet*,
+      first_row : Row,
+      first_col : Col, 
+      last_row : Row,
+      last_col : Col,
+    ) : Void
+    fun worksheet_set_landscape(worksheet : Worksheet*) : Void
+    fun worksheet_set_portrait(worksheet : Worksheet*) : Void
+    fun worksheet_set_page_view(worksheet : Worksheet*) : Void
+    fun worksheet_set_paper(worksheet : Worksheet*, paper_type : UInt8) : Void
+    fun worksheet_set_margins(
+      worksheet : Worksheet*,
+      left : LibC::Double,
+      right : LibC::Double,
+      top : LibC::Double,
+      bottom : LibC::Double
+    ) : Void
+    fun worksheet_set_header(worksheet : Worksheet*, string : Str) : LXWError
+    fun worksheet_set_header_opt(worksheet : Worksheet*, string : Str, options : HeaderFooterOptions*) : LXWError
+    fun worksheet_set_footer(worksheet : Worksheet*, string : Str) : LXWError
+    fun worksheet_set_footer_opt(worksheet : Worksheet*, string : Str, options : HeaderFooterOptions*) : LXWError
+    fun worksheet_set_h_pagebreaks(worksheet : Worksheet*, breaks : Row[16]) : LXWError
+    fun worksheet_set_v_pagebreaks(worksheet : Worksheet*, breaks : Col[16]) : LXWError
+    fun worksheet_print_across(worksheet : Worksheet*) : Void
+    fun worksheet_set_zoom(worksheet : Worksheet*, scale : UInt16) : Void
+    fun worksheet_gridlines(worksheet : Worksheet*, option : Gridlines) : Void
+    fun worksheet_center_horizontally(worksheet : Worksheet*) : Void
+    fun worksheet_center_vertically(worksheet : Worksheet*) : Void
+    fun worksheet_print_row_col_headers(worksheet : Worksheet*) : Void
+    fun worksheet_repeat_rows(worksheet : Worksheet*, first_row : Row, last_row : Row) : LXWError
+    fun worksheet_repeat_columns(worksheet : Worksheet*, first_row : Col, last_row : Col) : LXWError
+    fun worksheet_print_area(
+      worksheet : Worksheet*,
+      first_row : Row,
+      first_col : Col, 
+      last_row : Row,
+      last_col : Col
+    ) : LXWError
+    fun worksheet_fit_to_pages(worksheet : Worksheet*, width : UInt16, height : UInt16) : Void
+    fun worksheet_set_start_page(worksheet : Worksheet*, start_page : UInt16) : Void
+    fun worksheet_set_print_scale(worksheet : Worksheet*, scale : UInt16) : Void
+    fun worksheet_right_to_left(worksheet : Worksheet*) : Void
+    fun worksheet_hide_zero(worksheet : Worksheet*) : Void
+    fun worksheet_set_tab_color(worksheet : Worksheet*, color : Color) : Void
+    fun worksheet_protect(worksheet : Worksheet*, password : Str, options : Protection*) : Void
+    fun worksheet_outline_settings(
+      worksheet : Worksheet*,
+      visible : Bool,
+      symbols_below : Bool,
+      symbols_right : Bool,
+      auto_style : Bool
+    ) : Void
+    fun worksheet_set_default_row(worksheet : Worksheet*, height : LibC::Double, hide_unused_rows : Bool) : Void
+    fun worksheet_set_vba_name(worksheet : Worksheet*, name : Str) : LXWError
+
+    # format.h
     fun format_set_bold(format : Format*) : Void
     fun format_set_font_color(format : Format*, color : Color) : Void
     fun format_set_font_name(format : Format*, font_name : Str) : Void
@@ -496,6 +588,7 @@ module CrXLSXWriter
     fun format_set_left_color(format : Format*, color : Color) : Void
     fun format_set_right_color(format : Format*, color : Color) : Void
 
+    # chart.h
     fun chart_add_series(chart : Chart*, categories : Str, values : Str) : ChartSeries*
     fun chart_series_set_values(series : ChartSeries*, sheetname : Str, first_row : Row, first_col : Col, last_row : Row, last_col : Col) : Void
     fun chart_series_set_categories(series : ChartSeries*, sheetname : Str, first_row : Row, first_col : Col, last_row : Row, last_col : Col) : Void
