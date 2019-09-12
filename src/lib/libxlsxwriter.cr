@@ -403,6 +403,30 @@ module CrXLSXWriter
       y_scale : LibC::Double
     end
 
+    struct Protection
+      no_select_locked_cells : Bool
+      no_select_unlocked_cells : Bool
+      format_cells : Bool
+      format_columns : Bool
+      format_rows : Bool
+      insert_columns : Bool
+      insert_rows : Bool
+      insert_hyperlinks : Bool
+      delete_columns : Bool
+      delete_rows : Bool
+      sort : Bool
+      autofilter : Bool
+      pivot_tables : Bool
+      scenarios : Bool
+      objects : Bool
+      no_content : Bool
+      no_objects : Bool
+    end
+
+    struct HeaderFooterOptions
+      margin : LibC::Double
+    end
+
     fun workbook_new(path : Str) : Workbook*
     fun workbook_add_worksheet(workbook : Workbook*, sheetname : Str) : Worksheet*
     fun workbook_close(workbook : Workbook*) : LXWError
@@ -554,16 +578,16 @@ module CrXLSXWriter
     fun chart_chartarea_set_line(chart : Chart*, line : ChartLine*) : Void
     fun chart_chartarea_set_fill(chart : Chart*, line : ChartFill*) : Void
     fun chart_chartarea_set_pattern(chart : Chart*, line : ChartPattern*) : Void
-    
+
     fun chart_plotarea_set_line(chart : Chart*, line : ChartLine*) : Void
     fun chart_plotarea_set_fill(chart : Chart*, line : ChartFill*) : Void
     fun chart_plotarea_set_pattern(chart : Chart*, line : ChartPattern*) : Void
 
     fun chart_set_style(chart : Chart*, style_id : UInt8) : Void
-    fun chart_set_table(chart : Chart*) : Void  
-    fun chart_set_table_grid(chart : Chart*, horizontal : Bool, vertical : Bool, outline : Bool, legend_keys : Bool) : Void  
-    fun chart_set_up_down_bars(chart : Chart*) : Void  
-    fun chart_set_up_down_bars_format(chart : Chart*, up_bar_line : ChartLine*, up_bar_fill : ChartFill*, down_bar_line : ChartLine*, down_bar_fill : ChartFill*) : Void  
+    fun chart_set_table(chart : Chart*) : Void
+    fun chart_set_table_grid(chart : Chart*, horizontal : Bool, vertical : Bool, outline : Bool, legend_keys : Bool) : Void
+    fun chart_set_up_down_bars(chart : Chart*) : Void
+    fun chart_set_up_down_bars_format(chart : Chart*, up_bar_line : ChartLine*, up_bar_fill : ChartFill*, down_bar_line : ChartLine*, down_bar_fill : ChartFill*) : Void
     fun chart_set_drop_lines(chart : Chart*, line : ChartLine*) : Void
     fun chart_set_high_low_lines(chart : Chart*, line : ChartLine*) : Void
     fun chart_set_series_overlap(chart : Chart*, overlap : Int8) : Void
@@ -571,5 +595,24 @@ module CrXLSXWriter
     fun chart_show_blanks_as(chart : Chart*, option : ChartBlank) : Void
     fun chart_set_rotation(chart : Chart*, rotation : UInt16) : Void
     fun chart_set_hole_size(chart : Chart*, size : UInt8) : Void
+
+    # chartsheet.h
+    fun chartsheet_set_chart(chartsheet : Chartsheet*, chart : Chart*) : LXWError
+    fun chartsheet_activate(chartsheet : Chartsheet*) : Void
+    fun chartsheet_select(chartsheet : Chartsheet*) : Void
+    fun chartsheet_hide(chartsheet : Chartsheet*) : Void
+    fun chartsheet_set_first_sheet(chartsheet : Chartsheet*) : Void
+    fun chartsheet_set_tab_color(chartsheet : Chartsheet*, color : Color) : Void
+    fun chartsheet_protect(chartsheet : Chartsheet*, password : Str, options : Protection*) : Void
+    fun chartsheet_set_zoom(chartsheet : Chartsheet*, scale : UInt16) : Void
+    fun chartsheet_set_landscape(chartsheet : Chartsheet*) : Void
+    fun chartsheet_set_portrait(chartsheet : Chartsheet*) : Void
+    fun chartsheet_set_paper(chartsheet : Chartsheet*, paper_type : UInt8) : Void
+    fun chartsheet_set_margins(chartsheet : Chartsheet*, left : LibC::Double, right : LibC::Double, top : LibC::Double, bottom : LibC::Double) : Void
+    fun chartsheet_set_header(chartsheet : Chartsheet*, string : Str) : LXWError
+    fun chartsheet_set_footer(chartsheet : Chartsheet*, string : Str) : LXWError
+    fun chartsheet_set_header_opt(chartsheet : Chartsheet*, string : Str, options : HeaderFooterOptions*) : LXWError
+    fun chartsheet_set_footer_opt(chartsheet : Chartsheet*, string : Str, options : HeaderFooterOptions*) : LXWError
+
   end
 end
